@@ -1,20 +1,18 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req) {
   try {
+    // 1. BEHÚZTUK IDE BELÜLRE A RESEND PÉLDÁNYOSÍTÁST!
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     const body = await req.json();
     const { name, email, message } = body;
 
-    // 1. Email NEKED (a tulajdonosnak)
-    // Fontos: A 'from' mező teszteléskor csak 'onboarding@resend.dev' lehet,
-    // amíg nem hitelesíted a saját domainedet a Resend oldalán.
-    // A 'to' mező pedig csak az az email lehet, amivel regisztráltál a Resendre (teszt módban).
+    // 2. Email NEKED (a tulajdonosnak)
     const dataOwner = await resend.emails.send({
       from: 'Csizi Varrodája <onboarding@resend.dev>',
-      to: ['csizi.varroda@gmail.com'],
+      to: ['csizi.varroda@gmail.com'], // Ide a sajátod megy
       subject: `Új üzenet érkezett: ${name}`,
       html: `
         <h1>Új megkeresés a weboldalról</h1>
@@ -25,7 +23,7 @@ export async function POST(req) {
       `,
     });
 
-    // 2. Visszaigazoló email a FELHASZNÁLÓNAKasasa
+    // 3. Visszaigazoló email a FELHASZNÁLÓNAK
     await resend.emails.send({
       from: 'Csizi Varrodája <onboarding@resend.dev>',
       to: [email],
