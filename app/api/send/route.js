@@ -25,7 +25,7 @@ export async function POST(req) {
       `,
     });
 
-    // 2. Visszaigazoló email a FELHASZNÁLÓNAK
+    // 2. Visszaigazoló email a FELHASZNÁLÓNAKasasa
     await resend.emails.send({
       from: 'Csizi Varrodája <onboarding@resend.dev>',
       to: [email],
