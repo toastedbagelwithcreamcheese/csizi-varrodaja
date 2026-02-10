@@ -101,7 +101,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Kezdőlap", href: "#hero" },
-    { name: "Róluam", href: "#rolunk" },
+    { name: "Rólam", href: "#rolunk" },
     { name: "Munkáim", href: "#galeria" },
     { name: "Kapcsolat", href: "#kapcsolat" },
   ];
