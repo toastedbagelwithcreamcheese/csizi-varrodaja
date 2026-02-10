@@ -1,0 +1,481 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Scissors, Phone, MapPin, Mail, Instagram, Facebook, Clock, Star, Menu, X, ArrowRight } from "lucide-react";
+import Image from "next/image";
+
+// --- ADATOK (Kategóriákkal bővítve) ---
+// A kategóriák: "eskuvo", "szalagavato", "egyeb"
+const portfolioData = [
+  // --- SZALAGAVATÓ (A szalagavato mappából) ---
+  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2277.png", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2383.jpg", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2395.jpg", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3606.png", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_4273.webp", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/1000003170.jpg", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/1000003283.jpg", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/1000004955.png", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/1000013557.jpg", category: "szalagavato", title: "" },
+  { src: "/images/szalagavato/1000014086.jpg", category: "szalagavato", title: "" },
+
+  // --- ESKÜVŐ (Az eskuvo mappából - Cím nélkül) ---
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2183.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2619.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2622.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2732.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2734.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2922.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2929.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3190.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3196.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3287.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3726.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_5074.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_5168.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_18902.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000002930.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000003176.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000003179.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000006185.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000006324.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000006326.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000008305.png", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000010367.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000011821.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000012013.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000012017.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000012725.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000012727.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000012728.jpg", category: "eskuvo", title: "" },
+  { src: "/images/eskuvo/1000013069.jpg", category: "eskuvo", title: "" },
+
+  // --- EGYÉB (Az új egyeb mappából - Cím nélkül) ---
+  { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_1935.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_4420.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_11045.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000002392.png", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000003006.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000004401.png", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000005062.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000006185.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000007501.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000008666.png", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000010986.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000010987.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000011262.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000012048.jpg", category: "egyeb", title: "" },
+  { src: "/images/egyeb/1000012049.jpg", category: "egyeb", title: "" },
+];
+const categories = [
+  { id: "all", label: "Összes munka" },
+  { id: "eskuvo", label: "Esküvő & Koszorúslány" },
+  { id: "szalagavato", label: "Szalagavató" },
+  { id: "egyeb", label: "Egyéb" },
+];
+
+const services = [
+  { title: "Egyedi Tervezés", desc: "Álmaid ruhája méretre szabva, az elképzeléseid alapján.", icon: <Scissors className="w-6 h-6" /> },
+  { title: "Ruhaigazítás", desc: "Szűkítés, felhajtás, cipzárcsere – hogy tökéletesen álljon.", icon: <Star className="w-6 h-6" /> },
+  { title: "Lakástextil", desc: "Függönyök, díszpárnák és egyéb kiegészítők varrása.", icon: <Clock className="w-6 h-6" /> },
+];
+
+// --- KOMPONENSEK ---
+
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+      if (window.scrollY > 50) setMobileMenuOpen(false);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: "Kezdőlap", href: "#hero" },
+    { name: "Rólam", href: "#rolunk" },
+    { name: "Munkáim", href: "#galeria" },
+    { name: "Kapcsolat", href: "#kapcsolat" },
+  ];
+
+  return (
+    <>
+      <motion.header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4">
+        <motion.nav
+          layout
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ 
+            y: 0, 
+            opacity: 1,
+            width: scrolled ? "90%" : "100%",
+            maxWidth: scrolled ? "1000px" : "1280px",
+            borderRadius: scrolled ? "9999px" : "0px",
+          }}
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          className={`
+            flex items-center justify-between px-6 py-3 transition-colors duration-300
+            ${scrolled 
+              ? "bg-white/90 backdrop-blur-md shadow-xl border border-white/20" 
+              : "bg-transparent"
+            }
+          `}
+        >
+          <a href="#" className="flex items-center gap-3">
+             <div className="relative w-10 h-10 md:w-12 md:h-12">
+               <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+             </div>
+             <span className={`font-serif font-bold text-stone-800 text-lg md:text-xl ${scrolled ? "opacity-100" : "opacity-100 md:text-stone-900"} transition-opacity`}>
+               Csizi Varrodája
+             </span>
+          </a>
+
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <a 
+                key={link.name} 
+                href={link.href}
+                onMouseEnter={() => setHoveredLink(link.href)}
+                onMouseLeave={() => setHoveredLink(null)}
+                className="relative px-4 py-2 text-sm font-medium transition-colors"
+              >
+                {hoveredLink === link.href && (
+                  <motion.span
+                    layoutId="nav-hover"
+                    className="absolute inset-0 bg-rose-100 rounded-full -z-10"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className={`relative z-10 ${hoveredLink === link.href ? "text-rose-700" : "text-stone-700"}`}>
+                  {link.name}
+                </span>
+              </a>
+            ))}
+            
+            <a href="#kapcsolat" className={`ml-4 px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-sm hover:shadow-md ${scrolled ? "bg-rose-600 text-white hover:bg-rose-700" : "bg-stone-900 text-white hover:bg-stone-800"}`}>
+              Hívjon most!
+            </a>
+          </div>
+
+          <button className="md:hidden p-2 text-stone-800 bg-white/50 rounded-full backdrop-blur-sm" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </motion.nav>
+      </motion.header>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-x-4 top-24 z-40 md:hidden bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-stone-100 overflow-hidden"
+          >
+            <div className="flex flex-col p-6 space-y-4">
+              {navLinks.map((link) => (
+                <a key={link.name} href={link.href} onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-stone-700 hover:text-rose-600 transition-colors border-b border-stone-100 pb-2 last:border-0">
+                  {link.name}
+                </a>
+              ))}
+              <a href="#kapcsolat" onClick={() => setMobileMenuOpen(false)} className="bg-rose-600 text-white text-center py-3 rounded-xl font-bold mt-4 shadow-lg active:scale-95 transition-transform">
+                Időpontkérés
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+const SectionHeading = ({ title, subtitle }) => (
+  <div className="text-center mb-16">
+    <motion.h2 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-3xl md:text-5xl font-serif font-bold text-stone-800 mb-4"
+    >
+      {title}
+    </motion.h2>
+    <div className="w-20 h-1.5 bg-rose-600 mx-auto rounded-full mb-6"></div>
+    <p className="text-stone-500 max-w-2xl mx-auto text-lg">{subtitle}</p>
+  </div>
+);
+
+// --- ÚJ GALÉRIA KOMPONENS (RANDOMIZÁLT "ÖSSZES" NÉZETTEL) ---
+const Gallery = () => {
+  const [filter, setFilter] = useState("all");
+  // Létrehozunk egy state-et a kevert adatoknak
+  const [shuffledItems, setShuffledItems] = useState(portfolioData);
+
+  // Ez a useEffect csak egyszer fut le, amikor az oldal betöltődik (kliens oldalon)
+  useEffect(() => {
+    // Készítünk egy másolatot és összekeverjük
+    const randomOrder = [...portfolioData].sort(() => Math.random() - 0.5);
+    setShuffledItems(randomOrder);
+  }, []);
+
+  // Ha "all" a szűrő, akkor a kevert listát használjuk, amúgy az eredetiből szűrünk
+  const filteredItems = filter === "all" 
+    ? shuffledItems 
+    : portfolioData.filter(item => item.category === filter);
+
+  return (
+    <section id="galeria" className="py-24 bg-stone-50">
+      <div className="container mx-auto px-6">
+        <SectionHeading 
+          title="Munkáim" 
+          subtitle="Válogatás az általunk készített ruhákból és átalakításokból."
+        />
+        
+        {/* SZŰRŐ GOMBOK */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setFilter(cat.id)}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
+                filter === cat.id
+                  ? "bg-rose-600 text-white border-rose-600 shadow-lg scale-105"
+                  : "bg-white text-stone-600 border-stone-200 hover:border-rose-300 hover:bg-rose-50"
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* KÉPEK GRID */}
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <AnimatePresence mode="popLayout">
+            {filteredItems.map((item, index) => (
+              <motion.div 
+                layout
+                key={item.src} // Fontos: a kulcs a kép elérési útja maradjon
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.3 }}
+                className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-shadow bg-white"
+              >
+                <div className="aspect-[3/4] relative overflow-hidden">
+                    <Image 
+                        src={item.src} 
+                        alt={item.title || "Varroda referencia"} 
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    />
+                    {/* Hover Overlay - Csak akkor jelenik meg szöveg, ha van kitöltve title vagy category */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span className="text-rose-400 text-xs font-bold uppercase tracking-wider mb-1">
+                          {categories.find(c => c.id === item.category)?.label}
+                        </span>
+                        {item.title && (
+                          <h3 className="text-white font-serif text-xl font-bold">{item.title}</h3>
+                        )}
+                    </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-stone-50 selection:bg-rose-200 selection:text-rose-900">
+      <Navbar />
+
+      {/* HERO SZEKCIÓ */}
+      <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-stone-100 z-0">
+            <div className="absolute inset-0 bg-[url('/images/hero.png')] bg-cover bg-center opacity-40 blur-[2px]"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-stone-50"></div>
+        </div>
+
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="bg-white/30 backdrop-blur-sm p-8 md:p-12 rounded-[3rem] border border-white/40 shadow-xl"
+          >
+            <span className="text-rose-700 font-bold tracking-widest uppercase text-sm mb-6 block">
+              Minőség • Precizitás • Stílus
+            </span>
+            <h1 className="text-5xl md:text-7xl font-serif font-bold text-stone-900 mb-6 leading-tight drop-shadow-sm">
+              Ruhák, amelyek <br/> <span className="text-rose-600">rólad</span> mesélnek
+            </h1>
+            <p className="text-lg text-stone-800 font-medium mb-8 max-w-2xl mx-auto leading-relaxed">
+              Legyen szó a nagy napról, egy elegáns eseményről vagy a kedvenc darabod megmentéséről.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="#galeria" className="bg-stone-900 text-white px-8 py-4 rounded-full font-bold hover:bg-rose-700 transition-all shadow-lg hover:shadow-rose-500/30 flex items-center justify-center gap-2">
+                Munkáim <ArrowRight size={18} />
+              </a>
+              <a href="#kapcsolat" className="bg-white text-stone-900 px-8 py-4 rounded-full font-bold hover:bg-stone-50 transition-all shadow-md flex items-center justify-center">
+                Kapcsolat
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* SZOLGÁLTATÁSOK (RÓLAM) */}
+      <section id="rolunk" className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <motion.div 
+               initial={{ opacity: 0, x: -50 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="relative h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-stone-50"
+            >
+               <Image 
+                src="/images/1000012049.jpg" 
+                alt="Munka közben" 
+                fill 
+                className="object-cover hover:scale-105 transition-transform duration-700"
+              />
+            </motion.div>
+            
+            <div>
+              <span className="text-rose-600 font-bold mb-2 block uppercase tracking-wider">RÓLAM</span>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-stone-900 mb-6 leading-tight">
+                Minden öltésben ott a <span className="text-rose-600 italic">gondoskodás</span>
+              </h2>
+              <p className="text-stone-600 mb-8 leading-relaxed text-lg">
+                Hiszek abban, hogy egy ruha nem csak egy tárgy, hanem az önkifejezés eszköze. 
+                Műhelyünkben a hagyományos szabászat találkozik a modern igényekkel.
+              </p>
+              
+              <div className="space-y-6">
+                {services.map((service, index) => (
+                  <motion.div 
+                    key={index}
+                    whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 241, 242, 0.5)" }}
+                    className="flex gap-5 items-start p-4 rounded-2xl transition-all hover:shadow-lg border border-transparent hover:border-rose-100"
+                  >
+                    <div className="p-4 bg-rose-50 rounded-2xl text-rose-600 shadow-sm">
+                      {service.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-xl text-stone-900 mb-1">{service.title}</h3>
+                      <p className="text-stone-500">{service.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ÚJ FILTEREZHETŐ GALÉRIA BEILLESZTÉSE */}
+      <Gallery />
+
+      {/* KAPCSOLAT - ÚJ DESIGN */}
+      <section id="kapcsolat" className="py-24 bg-stone-900 text-white relative overflow-hidden">
+        {/* Dekoratív háttérelemek */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-rose-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Keressen minket bizalommal!</h2>
+              <p className="text-stone-400 mb-10 text-lg leading-relaxed">
+                Kérdése van? Szeretne időpontot foglalni ruhapróbára? 
+                Hívjon minket vagy írjon üzenetet, és hamarosan válaszolunk.
+              </p>
+              
+              <div className="space-y-8">
+                <div className="flex items-center gap-6 group cursor-pointer">
+                  <div className="w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-lg">
+                    <Phone />
+                  </div>
+                  <div>
+                    <p className="text-stone-500 text-sm mb-1">Telefonszám</p>
+                    <p className="text-xl font-medium group-hover:text-rose-400 transition-colors">+36 30 622 7855</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-6 group cursor-pointer">
+                  <div className="w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-lg">
+                    <Mail />
+                  </div>
+                  <div>
+                    <p className="text-stone-500 text-sm mb-1">Email cím</p>
+                    <p className="text-xl font-medium group-hover:text-rose-400 transition-colors">csizi.varroda@gmail.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6 group">
+                  <div className="w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-lg">
+                    <MapPin />
+                  </div>
+                  <div>
+                    <p className="text-stone-500 text-sm mb-1">Cím</p>
+                    <p className="text-xl font-medium">8921 Zalaszentiván, Zrínyi utca 60.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-4 mt-12">
+                <a href="https://www.facebook.com/Csizivarroda" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-stone-800 rounded-full flex items-center justify-center hover:bg-rose-600 text-white transition-all hover:-translate-y-1 shadow-lg">
+                    <Facebook size={22} />
+                </a>
+                <a href="#" className="w-12 h-12 bg-stone-800 rounded-full flex items-center justify-center hover:bg-rose-600 text-white transition-all hover:-translate-y-1 shadow-lg">
+                    <Instagram size={22} />
+                </a>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 md:p-10 rounded-[2.5rem] text-stone-900 shadow-2xl">
+              <h3 className="text-2xl font-bold font-serif mb-6">Üzenet küldése</h3>
+              <form className="space-y-5">
+                <div>
+                  <label className="block text-sm font-bold text-stone-700 mb-2">Név</label>
+                  <input type="text" className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" placeholder="Az Ön neve" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-stone-700 mb-2">Email</label>
+                  <input type="email" className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" placeholder="pelda@email.com" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-stone-700 mb-2">Üzenet</label>
+                  <textarea rows="4" className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" placeholder="Miben segíthetünk?"></textarea>
+                </div>
+                <button type="submit" className="w-full bg-rose-600 text-white font-bold py-4 rounded-xl hover:bg-rose-700 hover:shadow-lg hover:shadow-rose-500/30 transition-all active:scale-95">
+                  Üzenet elküldése
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LÁBLÉC */}
+      <footer className="bg-stone-950 text-stone-600 py-10 text-center text-sm border-t border-stone-900">
+        <p>&copy; {new Date().getFullYear()} Csizi Varrodája. Minden jog fenntartva.</p>
+        <div className="flex justify-center gap-6 mt-4">
+            <a href="#" className="hover:text-rose-500 transition-colors">Adatkezelés</a>
+            <a href="#" className="hover:text-rose-500 transition-colors">Impresszum</a>
+        </div>
+      </footer>
+    </main>
+  );
+}
