@@ -87,6 +87,8 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState(null);
+  // ÚJ: Állapot a hívás megerősítéséhez
+  const [callModalOpen, setCallModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,7 +101,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Kezdőlap", href: "#hero" },
-    { name: "Rólam", href: "#rolunk" },
+    { name: "Róluam", href: "#rolunk" },
     { name: "Munkáim", href: "#galeria" },
     { name: "Kapcsolat", href: "#kapcsolat" },
   ];
@@ -160,9 +162,17 @@ const Navbar = () => {
               </a>
             ))}
             
-            <a href="#kapcsolat" className={`ml-4 px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-sm hover:shadow-md ${scrolled ? "bg-rose-600 text-white hover:bg-rose-700" : "bg-stone-900 text-white hover:bg-stone-800"}`}>
+            {/* MÓDOSÍTOTT GOMB: Nem link, hanem button, ami nyitja a modált */}
+            <button 
+              onClick={() => setCallModalOpen(true)}
+              className={`ml-4 px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-sm hover:shadow-md cursor-pointer
+                ${scrolled 
+                  ? "bg-rose-600 text-white hover:bg-rose-700" 
+                  : "bg-stone-900 text-white hover:bg-stone-800"
+                }`}
+            >
               Hívjon most!
-            </a>
+            </button>
           </div>
 
           <button className="md:hidden p-2 text-stone-800 bg-white/50 rounded-full backdrop-blur-sm" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -171,6 +181,7 @@ const Navbar = () => {
         </motion.nav>
       </motion.header>
 
+      {/* MOBIL MENÜ */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -185,11 +196,69 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
-              <a href="#kapcsolat" onClick={() => setMobileMenuOpen(false)} className="bg-rose-600 text-white text-center py-3 rounded-xl font-bold mt-4 shadow-lg active:scale-95 transition-transform">
-                Időpontkérés
-              </a>
+              {/* Mobil nézetben is működjön a hívás gomb */}
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setCallModalOpen(true);
+                }}
+                className="bg-rose-600 text-white text-center py-3 rounded-xl font-bold mt-4 shadow-lg active:scale-95 transition-transform w-full"
+              >
+                Hívjon most!
+              </button>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ÚJ: HÍVÁS MEGERŐSÍTŐ MODÁL */}
+      <AnimatePresence>
+        {callModalOpen && (
+          <>
+            {/* Sötét háttér (backdrop) */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setCallModalOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+            />
+            
+            {/* Maga az ablak */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] bg-white p-8 rounded-3xl shadow-2xl w-[90%] max-w-sm text-center border border-stone-100"
+            >
+              <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Phone size={32} />
+              </div>
+              
+              <h3 className="text-2xl font-serif font-bold text-stone-900 mb-2">Hívás indítása</h3>
+              <p className="text-stone-500 mb-8">Biztosan felhívja a Csizi Varrodáját?</p>
+              
+              <div className="flex flex-col gap-3">
+                {/* Ez a gomb indítja a tényleges hívást */}
+                <a 
+                  href="tel:+36301234567"
+                  className="w-full bg-rose-600 text-white font-bold py-3.5 rounded-xl hover:bg-rose-700 transition-colors shadow-lg shadow-rose-200 flex items-center justify-center gap-2"
+                  onClick={() => setCallModalOpen(false)} // Bezárjuk az ablakot kattintás után
+                >
+                  <Phone size={18} />
+                  Igen, hívás indítása
+                </a>
+                
+                {/* Mégse gomb */}
+                <button 
+                  onClick={() => setCallModalOpen(false)}
+                  className="w-full bg-stone-100 text-stone-600 font-bold py-3.5 rounded-xl hover:bg-stone-200 transition-colors"
+                >
+                  Mégsem
+                </button>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
@@ -294,6 +363,107 @@ const Gallery = () => {
   );
 };
 
+const ContactForm = () => {
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState("idle"); // idle, loading, success, error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" }); // Űrlap törlése
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <div className="bg-white p-8 md:p-10 rounded-[2.5rem] text-stone-900 shadow-2xl h-fit">
+      <h3 className="text-2xl font-bold font-serif mb-6">Írjon nekünk üzenetet</h3>
+      
+      {status === "success" ? (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-green-50 border border-green-200 text-green-800 p-6 rounded-2xl text-center"
+        >
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+          </div>
+          <h4 className="text-xl font-bold mb-2">Sikeres küldés!</h4>
+          <p>Köszönjük üzenetét, hamarosan válaszolunk.</p>
+          <button onClick={() => setStatus("idle")} className="mt-4 text-sm font-bold text-green-700 underline">Új üzenet küldése</button>
+        </motion.div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-bold text-stone-700 mb-2">Név</label>
+            <input 
+              required
+              type="text" 
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" 
+              placeholder="Az Ön neve" 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-stone-700 mb-2">Email cím</label>
+            <input 
+              required
+              type="email" 
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" 
+              placeholder="pelda@email.com" 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-stone-700 mb-2">Miben segíthetünk?</label>
+            <textarea 
+              required
+              rows="4" 
+              value={formData.message}
+              onChange={(e) => setFormData({...formData, message: e.target.value})}
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" 
+              placeholder="Írja le kérését..."
+            ></textarea>
+          </div>
+          
+          {status === "error" && (
+            <p className="text-red-600 text-sm text-center font-medium">Hiba történt a küldéskor. Kérjük próbálja újra később, vagy hívjon telefonon.</p>
+          )}
+
+          <button 
+            type="submit" 
+            disabled={status === "loading"}
+            className="w-full bg-rose-600 text-white font-bold py-4 rounded-xl hover:bg-rose-700 hover:shadow-lg hover:shadow-rose-500/30 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+          >
+            {status === "loading" ? (
+              <>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                Küldés folyamatban...
+              </>
+            ) : "Üzenet elküldése"}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+};
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-stone-50 selection:bg-rose-200 selection:text-rose-900">
@@ -388,41 +558,32 @@ export default function Home() {
       <Gallery />
 
       {/* KAPCSOLAT - ÚJ DESIGN */}
+      {/* KAPCSOLAT - MŰKÖDŐ EMAIL KÜLDÉSSEL */}
       <section id="kapcsolat" className="py-24 bg-stone-900 text-white relative overflow-hidden">
-        {/* Dekoratív háttérelemek */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-rose-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
+            {/* BAL OLDAL - ADATOK (Ez maradt a régi) */}
             <div>
               <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Keressen minket bizalommal!</h2>
               <p className="text-stone-400 mb-10 text-lg leading-relaxed">
-                Kérdése van? Szeretne időpontot foglalni ruhapróbára? 
-                Hívjon minket vagy írjon üzenetet, és hamarosan válaszolunk.
+                Legyen szó egy egyszerű felhajtásról vagy álmai ruhájának megvalósításáról.
+                Hívjon minket, vagy látogasson el műhelyünkbe nyitvatartási időben.
               </p>
               
               <div className="space-y-8">
-                <div className="flex items-center gap-6 group cursor-pointer">
+                <a href="tel:+36306227855" className="flex items-center gap-6 group cursor-pointer">
                   <div className="w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-lg">
                     <Phone />
                   </div>
                   <div>
-                    <p className="text-stone-500 text-sm mb-1">Telefonszám</p>
+                    <p className="text-stone-500 text-sm mb-1">Telefonszám (Kattintson a híváshoz)</p>
                     <p className="text-xl font-medium group-hover:text-rose-400 transition-colors">+36 30 622 7855</p>
                   </div>
-                </div>
+                </a>
                 
-                <div className="flex items-center gap-6 group cursor-pointer">
-                  <div className="w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-lg">
-                    <Mail />
-                  </div>
-                  <div>
-                    <p className="text-stone-500 text-sm mb-1">Email cím</p>
-                    <p className="text-xl font-medium group-hover:text-rose-400 transition-colors">csizi.varroda@gmail.com</p>
-                  </div>
-                </div>
-
                 <div className="flex items-center gap-6 group">
                   <div className="w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-lg">
                     <MapPin />
@@ -432,10 +593,24 @@ export default function Home() {
                     <p className="text-xl font-medium">8921 Zalaszentiván, Zrínyi utca 60.</p>
                   </div>
                 </div>
+
+                <div className="flex items-start gap-6 group">
+                  <div className="w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-lg shrink-0">
+                    <Clock />
+                  </div>
+                  <div>
+                    <p className="text-stone-500 text-sm mb-1">Nyitvatartás</p>
+                    <ul className="text-lg font-medium space-y-1">
+                        <li className="flex justify-between gap-8"><span className="text-stone-400">Hétfő - Péntek:</span> <span>08:00 - 17:00</span></li>
+                        <li className="flex justify-between gap-8"><span className="text-stone-400">Szombat:</span> <span>09:00 - 13:00</span></li>
+                        <li className="flex justify-between gap-8"><span className="text-stone-400">Vasárnap:</span> <span className="text-rose-400">Zárva</span></li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="flex gap-4 mt-12">
-                <a href="https://www.facebook.com/Csizivarroda" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-stone-800 rounded-full flex items-center justify-center hover:bg-rose-600 text-white transition-all hover:-translate-y-1 shadow-lg">
+                <a href="#" className="w-12 h-12 bg-stone-800 rounded-full flex items-center justify-center hover:bg-rose-600 text-white transition-all hover:-translate-y-1 shadow-lg">
                     <Facebook size={22} />
                 </a>
                 <a href="#" className="w-12 h-12 bg-stone-800 rounded-full flex items-center justify-center hover:bg-rose-600 text-white transition-all hover:-translate-y-1 shadow-lg">
@@ -444,26 +619,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white p-8 md:p-10 rounded-[2.5rem] text-stone-900 shadow-2xl">
-              <h3 className="text-2xl font-bold font-serif mb-6">Üzenet küldése</h3>
-              <form className="space-y-5">
-                <div>
-                  <label className="block text-sm font-bold text-stone-700 mb-2">Név</label>
-                  <input type="text" className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" placeholder="Az Ön neve" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-stone-700 mb-2">Email</label>
-                  <input type="email" className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" placeholder="pelda@email.com" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-stone-700 mb-2">Üzenet</label>
-                  <textarea rows="4" className="w-full bg-stone-50 border border-stone-200 rounded-xl p-4 focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none transition-all" placeholder="Miben segíthetünk?"></textarea>
-                </div>
-                <button type="submit" className="w-full bg-rose-600 text-white font-bold py-4 rounded-xl hover:bg-rose-700 hover:shadow-lg hover:shadow-rose-500/30 transition-all active:scale-95">
-                  Üzenet elküldése
-                </button>
-              </form>
-            </div>
+            {/* JOBB OLDAL - MŰKÖDŐ ŰRLAP */}
+            <ContactForm />
           </div>
         </div>
       </section>
