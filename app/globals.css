@@ -1,64 +1,12 @@
-/* Wedding Website Design System - Romantic Garden Formal Theme */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    /* Romantic Pastel Wedding Palette */
-    --background: 24 100% 98%;  /* Warm cream */
-    --foreground: 205 15% 25%;  /* Soft charcoal */
-
-    --card: 0 0% 100%;  /* Pure white cards */
-    --card-foreground: 205 15% 25%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 205 15% 25%;
-
-    /* Wedding Theme Colors */
-    --primary: 330 25% 85%;  /* Soft blush pink */
-    --primary-foreground: 205 15% 25%;
-
-    --secondary: 140 20% 85%;  /* Sage green */
-    --secondary-foreground: 205 15% 25%;
-    
-    --muted: 24 15% 92%;  /* Warm beige */
-    --muted-foreground: 205 15% 45%;
-
-    --accent: 45 60% 92%;  /* Champagne */
-    --accent-foreground: 205 15% 25%;
-
-    --destructive: 0 65% 75%;  /* Soft coral for errors */
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 24 20% 90%;  /* Soft cream border */
-    --input: 24 20% 95%;  /* Light cream input */
-    --ring: 330 25% 75%;  /* Pink focus ring */
-
-    --radius: 12px;
-
-    /* Typography */
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
-  }
-
-  /* Apply fonts */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-  }
-  body {
-    font-family: var(--font-body);
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+body {
+  background-color: #fafaf9; /* stone-50 */
+  color: #1c1917; /* stone-900 */
 }
-
