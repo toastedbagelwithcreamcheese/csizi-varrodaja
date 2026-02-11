@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Scissors, Phone, MapPin, Mail, Instagram, Facebook, Clock, Star, Menu, X, ArrowRight, CheckCircle } from "lucide-react";
 import Image from "next/image";
+import { supabase } from "@/lib/supabaseClient";
 
 const categories = [
   { id: "all", label: "Összes munka" },
