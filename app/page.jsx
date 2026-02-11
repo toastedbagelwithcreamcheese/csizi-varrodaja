@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Scissors, Phone, MapPin, Mail, Instagram, Facebook, Clock, Star, Menu, X, ArrowRight } from "lucide-react";
+import { Scissors, Phone, MapPin, Mail, Instagram, Facebook, Clock, Star, Menu, X, ArrowRight, CheckCircle } from "lucide-react";
 import Image from "next/image";
 
-// --- ADATOK (Kategóriákkal bővítve) ---
-// A kategóriák: "eskuvo", "szalagavato", "egyeb"
+// --- ADATOK ---
 const portfolioData = [
-  // --- SZALAGAVATÓ (A szalagavato mappából) ---
+  // --- SZALAGAVATÓ ---
   { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2277.png", category: "szalagavato", title: "" },
   { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2383.jpg", category: "szalagavato", title: "" },
   { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2395.jpg", category: "szalagavato", title: "" },
@@ -20,7 +19,7 @@ const portfolioData = [
   { src: "/images/szalagavato/1000013557.jpg", category: "szalagavato", title: "" },
   { src: "/images/szalagavato/1000014086.jpg", category: "szalagavato", title: "" },
 
-  // --- ESKÜVŐ (Az eskuvo mappából - Cím nélkül) ---
+  // --- ESKÜVŐ ---
   { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2183.jpg", category: "eskuvo", title: "" },
   { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2619.jpg", category: "eskuvo", title: "" },
   { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2622.jpg", category: "eskuvo", title: "" },
@@ -51,7 +50,7 @@ const portfolioData = [
   { src: "/images/eskuvo/1000012728.jpg", category: "eskuvo", title: "" },
   { src: "/images/eskuvo/1000013069.jpg", category: "eskuvo", title: "" },
 
-  // --- EGYÉB (Az új egyeb mappából - Cím nélkül) ---
+  // --- EGYÉB ---
   { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_1935.jpg", category: "egyeb", title: "" },
   { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_4420.jpg", category: "egyeb", title: "" },
   { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_11045.jpg", category: "egyeb", title: "" },
@@ -68,6 +67,7 @@ const portfolioData = [
   { src: "/images/egyeb/1000012048.jpg", category: "egyeb", title: "" },
   { src: "/images/egyeb/1000012049.jpg", category: "egyeb", title: "" },
 ];
+
 const categories = [
   { id: "all", label: "Összes munka" },
   { id: "eskuvo", label: "Esküvő & Koszorúslány" },
@@ -87,7 +87,6 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState(null);
-  // ÚJ: Állapot a hívás megerősítéséhez
   const [callModalOpen, setCallModalOpen] = useState(false);
 
   useEffect(() => {
@@ -101,8 +100,8 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Kezdőlap", href: "#hero" },
-    { name: "Rólam", href: "#rolunk" },
-    { name: "Munkáim", href: "#galeria" },
+    { name: "Rólam", href: "#rolunk" }, // ÁTÍRVA: Rólunk -> Rólam
+    { name: "Munkáim", href: "#galeria" }, // ÁTÍRVA: Munkáink -> Munkáim
     { name: "Kapcsolat", href: "#kapcsolat" },
   ];
 
@@ -162,7 +161,6 @@ const Navbar = () => {
               </a>
             ))}
             
-            {/* MÓDOSÍTOTT GOMB: Nem link, hanem button, ami nyitja a modált */}
             <button 
               onClick={() => setCallModalOpen(true)}
               className={`ml-4 px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-sm hover:shadow-md cursor-pointer
@@ -196,7 +194,6 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ))}
-              {/* Mobil nézetben is működjön a hívás gomb */}
               <button 
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -211,11 +208,10 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* ÚJ: HÍVÁS MEGERŐSÍTŐ MODÁL */}
+      {/* HÍVÁS MEGERŐSÍTŐ MODÁL */}
       <AnimatePresence>
         {callModalOpen && (
           <>
-            {/* Sötét háttér (backdrop) */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -224,7 +220,6 @@ const Navbar = () => {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
             />
             
-            {/* Maga az ablak */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -239,17 +234,15 @@ const Navbar = () => {
               <p className="text-stone-500 mb-8">Biztosan felhívja a Csizi Varrodáját?</p>
               
               <div className="flex flex-col gap-3">
-                {/* Ez a gomb indítja a tényleges hívást */}
                 <a 
-                  href="tel:+36301234567"
+                  href="tel:+36306227855"
                   className="w-full bg-rose-600 text-white font-bold py-3.5 rounded-xl hover:bg-rose-700 transition-colors shadow-lg shadow-rose-200 flex items-center justify-center gap-2"
-                  onClick={() => setCallModalOpen(false)} // Bezárjuk az ablakot kattintás után
+                  onClick={() => setCallModalOpen(false)} 
                 >
                   <Phone size={18} />
                   Igen, hívás indítása
                 </a>
                 
-                {/* Mégse gomb */}
                 <button 
                   onClick={() => setCallModalOpen(false)}
                   className="w-full bg-stone-100 text-stone-600 font-bold py-3.5 rounded-xl hover:bg-stone-200 transition-colors"
@@ -280,20 +273,15 @@ const SectionHeading = ({ title, subtitle }) => (
   </div>
 );
 
-// --- ÚJ GALÉRIA KOMPONENS (RANDOMIZÁLT "ÖSSZES" NÉZETTEL) ---
 const Gallery = () => {
   const [filter, setFilter] = useState("all");
-  // Létrehozunk egy state-et a kevert adatoknak
   const [shuffledItems, setShuffledItems] = useState(portfolioData);
 
-  // Ez a useEffect csak egyszer fut le, amikor az oldal betöltődik (kliens oldalon)
   useEffect(() => {
-    // Készítünk egy másolatot és összekeverjük
     const randomOrder = [...portfolioData].sort(() => Math.random() - 0.5);
     setShuffledItems(randomOrder);
   }, []);
 
-  // Ha "all" a szűrő, akkor a kevert listát használjuk, amúgy az eredetiből szűrünk
   const filteredItems = filter === "all" 
     ? shuffledItems 
     : portfolioData.filter(item => item.category === filter);
@@ -302,11 +290,10 @@ const Gallery = () => {
     <section id="galeria" className="py-24 bg-stone-50">
       <div className="container mx-auto px-6">
         <SectionHeading 
-          title="Munkáim" 
-          subtitle="Válogatás az általunk készített ruhákból és átalakításokból."
+          title="Munkáim" // ÁTÍRVA: Munkáink -> Munkáim
+          subtitle="Válogatás az általam készített ruhákból és átalakításokból." // ÁTÍRVA: általunk -> általam
         />
         
-        {/* SZŰRŐ GOMBOK */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map((cat) => (
             <button
@@ -323,13 +310,12 @@ const Gallery = () => {
           ))}
         </div>
 
-        {/* KÉPEK GRID */}
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item, index) => (
               <motion.div 
                 layout
-                key={item.src} // Fontos: a kulcs a kép elérési útja maradjon
+                key={item.src} 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
@@ -344,7 +330,6 @@ const Gallery = () => {
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
-                    {/* Hover Overlay - Csak akkor jelenik meg szöveg, ha van kitöltve title vagy category */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                         <span className="text-rose-400 text-xs font-bold uppercase tracking-wider mb-1">
                           {categories.find(c => c.id === item.category)?.label}
@@ -365,7 +350,7 @@ const Gallery = () => {
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState("idle"); // idle, loading, success, error
+  const [status, setStatus] = useState("idle"); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -380,7 +365,7 @@ const ContactForm = () => {
 
       if (res.ok) {
         setStatus("success");
-        setFormData({ name: "", email: "", message: "" }); // Űrlap törlése
+        setFormData({ name: "", email: "", message: "" }); 
       } else {
         setStatus("error");
       }
@@ -391,7 +376,7 @@ const ContactForm = () => {
 
   return (
     <div className="bg-white p-8 md:p-10 rounded-[2.5rem] text-stone-900 shadow-2xl h-fit">
-      <h3 className="text-2xl font-bold font-serif mb-6">Írjon nekünk üzenetet</h3>
+      <h3 className="text-2xl font-bold font-serif mb-6">Írjon nekem üzenetet</h3> {/* ÁTÍRVA */}
       
       {status === "success" ? (
         <motion.div 
@@ -403,7 +388,7 @@ const ContactForm = () => {
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
           </div>
           <h4 className="text-xl font-bold mb-2">Sikeres küldés!</h4>
-          <p>Köszönjük üzenetét, hamarosan válaszolunk.</p>
+          <p>Köszönöm üzenetét, hamarosan válaszolok.</p> {/* ÁTÍRVA: válaszolok */}
           <button onClick={() => setStatus("idle")} className="mt-4 text-sm font-bold text-green-700 underline">Új üzenet küldése</button>
         </motion.div>
       ) : (
@@ -431,7 +416,7 @@ const ContactForm = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-stone-700 mb-2">Miben segíthetünk?</label>
+            <label className="block text-sm font-bold text-stone-700 mb-2">Miben segíthetek?</label> {/* ÁTÍRVA */}
             <textarea 
               required
               rows="4" 
@@ -483,14 +468,16 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="bg-white/30 backdrop-blur-sm p-8 md:p-12 rounded-[3rem] border border-white/40 shadow-xl"
           >
+            {/* ÁTÍRVA: 1996 óta bekerült */}
             <span className="text-rose-700 font-bold tracking-widest uppercase text-sm mb-6 block">
-              Minőség • Precizitás • Stílus
+              Minőség • Precizitás • 1996 óta
             </span>
             <h1 className="text-5xl md:text-7xl font-serif font-bold text-stone-900 mb-6 leading-tight drop-shadow-sm">
               Ruhák, amelyek <br/> <span className="text-rose-600">rólad</span> mesélnek
             </h1>
+            {/* ÁTÍRVA: 30 éves tapasztalat kiemelve */}
             <p className="text-lg text-stone-800 font-medium mb-8 max-w-2xl mx-auto leading-relaxed">
-              Legyen szó a nagy napról, egy elegáns eseményről vagy a kedvenc darabod megmentéséről.
+              Több mint <span className="font-bold text-rose-700">30 éves szakmai tapasztalattal</span> vállalok egyedi tervezést, javítást és átalakítást, hogy ruháid tökéletesek legyenek.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="#galeria" className="bg-stone-900 text-white px-8 py-4 rounded-full font-bold hover:bg-rose-700 transition-all shadow-lg hover:shadow-rose-500/30 flex items-center justify-center gap-2">
@@ -504,7 +491,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SZOLGÁLTATÁSOK (RÓLAM) */}
+      {/* RÓLAM SZEKCIÓ (Régen Rólunk) */}
       <section id="rolunk" className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -515,7 +502,7 @@ export default function Home() {
                className="relative h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-stone-50"
             >
                <Image 
-                src="/images/1000012049.jpg" 
+                src="/images/csizi.png" 
                 alt="Munka közben" 
                 fill 
                 className="object-cover hover:scale-105 transition-transform duration-700"
@@ -527,10 +514,18 @@ export default function Home() {
               <h2 className="text-4xl md:text-5xl font-serif font-bold text-stone-900 mb-6 leading-tight">
                 Minden öltésben ott a <span className="text-rose-600 italic">gondoskodás</span>
               </h2>
-              <p className="text-stone-600 mb-8 leading-relaxed text-lg">
-                Hiszek abban, hogy egy ruha nem csak egy tárgy, hanem az önkifejezés eszköze. 
-                Műhelyünkben a hagyományos szabászat találkozik a modern igényekkel.
-              </p>
+              {/* ÁTÍRVA: A megrendelő szövege */}
+              <div className="text-stone-600 mb-8 leading-relaxed text-lg space-y-4">
+                <p>
+                  Varrónőként <span className="font-bold text-stone-800">1996 óta dolgozom</span> és azóta is szenvedélyem a varrás. 
+                  Szakmámban mindent megalkotok, legyen szó menyasszonyi ruháról, szalagavató ruháról, vagy akár egyedi tervezésű ruhadarabokról.
+                </p>
+                <p>
+                  Emellett vállalom ruhák javítását, átalakítását is, hogy kedvenc darabjai újra tökéletesek legyenek. 
+                  Minden egyes darabot szívvel-lélekkel készítek, hogy Ön elégedett legyen a végeredménnyel. 
+                  Ha egyedi, minőségi ruhát keres, forduljon hozzám bizalommal!
+                </p>
+              </div>
               
               <div className="space-y-6">
                 {services.map((service, index) => (
@@ -554,23 +549,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ÚJ FILTEREZHETŐ GALÉRIA BEILLESZTÉSE */}
+      {/* FILTEREZHETŐ GALÉRIA */}
       <Gallery />
 
-      {/* KAPCSOLAT - ÚJ DESIGN */}
-      {/* KAPCSOLAT - MŰKÖDŐ EMAIL KÜLDÉSSEL */}
+      {/* KAPCSOLAT */}
       <section id="kapcsolat" className="py-24 bg-stone-900 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-rose-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
-            {/* BAL OLDAL - ADATOK (Ez maradt a régi) */}
             <div>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Keressen minket bizalommal!</h2>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">Keressen bizalommal!</h2> {/* ÁTÍRVA */}
               <p className="text-stone-400 mb-10 text-lg leading-relaxed">
                 Legyen szó egy egyszerű felhajtásról vagy álmai ruhájának megvalósításáról.
-                Hívjon minket, vagy látogasson el műhelyünkbe nyitvatartási időben.
+                Hívjon engem, vagy látogasson el műhelyembe nyitvatartási időben. {/* ÁTÍRVA: engem/műhelyembe */}
               </p>
               
               <div className="space-y-8">
@@ -602,8 +595,7 @@ export default function Home() {
                     <p className="text-stone-500 text-sm mb-1">Nyitvatartás</p>
                     <ul className="text-lg font-medium space-y-1">
                         <li className="flex justify-between gap-8"><span className="text-stone-400">Hétfő - Péntek:</span> <span>08:00 - 17:00</span></li>
-                        <li className="flex justify-between gap-8"><span className="text-stone-400">Szombat:</span> <span>09:00 - 13:00</span></li>
-                        <li className="flex justify-between gap-8"><span className="text-stone-400">Vasárnap:</span> <span className="text-rose-400">Zárva</span></li>
+                        <li className="flex justify-between gap-8"><span className="text-stone-400">Szombat - Vasárnap:</span> <span className="text-rose-400">Zárva</span></li>
                     </ul>
                   </div>
                 </div>
@@ -619,7 +611,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* JOBB OLDAL - MŰKÖDŐ ŰRLAP */}
             <ContactForm />
           </div>
         </div>
