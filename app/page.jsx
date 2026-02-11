@@ -5,69 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Scissors, Phone, MapPin, Mail, Instagram, Facebook, Clock, Star, Menu, X, ArrowRight, CheckCircle } from "lucide-react";
 import Image from "next/image";
 
-// --- ADATOK ---
-const portfolioData = [
-  // --- SZALAGAVATÓ ---
-  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2277.png", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2383.jpg", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2395.jpg", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3606.png", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_4273.webp", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/1000003170.jpg", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/1000003283.jpg", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/1000004955.png", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/1000013557.jpg", category: "szalagavato", title: "" },
-  { src: "/images/szalagavato/1000014086.jpg", category: "szalagavato", title: "" },
-
-  // --- ESKÜVŐ ---
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2183.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2619.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2622.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2732.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2734.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2922.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_2929.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3190.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3196.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3287.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_3726.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_5074.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_5168.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_18902.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000002930.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000003176.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000003179.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000006185.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000006324.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000006326.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000008305.png", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000010367.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000011821.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000012013.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000012017.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000012725.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000012727.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000012728.jpg", category: "eskuvo", title: "" },
-  { src: "/images/eskuvo/1000013069.jpg", category: "eskuvo", title: "" },
-
-  // --- EGYÉB ---
-  { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_1935.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_4420.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/673c6bd5-92a9-45e2-8469-6c3a83f83b0c-1_all_11045.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000002392.png", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000003006.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000004401.png", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000005062.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000006185.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000007501.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000008666.png", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000010986.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000010987.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000011262.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000012048.jpg", category: "egyeb", title: "" },
-  { src: "/images/egyeb/1000012049.jpg", category: "egyeb", title: "" },
-];
-
 const categories = [
   { id: "all", label: "Összes munka" },
   { id: "eskuvo", label: "Esküvő & Koszorúslány" },
@@ -273,27 +210,50 @@ const SectionHeading = ({ title, subtitle }) => (
   </div>
 );
 
+// --- ÚJ GALÉRIA KOMPONENS (SUPABASE BEKÖTÉSSEL) ---
 const Gallery = () => {
   const [filter, setFilter] = useState("all");
-  const [shuffledItems, setShuffledItems] = useState(portfolioData);
+  const [items, setItems] = useState([]); // Itt tároljuk a letöltött képeket
+  const [loading, setLoading] = useState(true);
 
+  // Képek letöltése a Supabase-ből
   useEffect(() => {
-    const randomOrder = [...portfolioData].sort(() => Math.random() - 0.5);
-    setShuffledItems(randomOrder);
+    const fetchImages = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('images')
+          .select('*')
+          .order('created_at', { ascending: false }); // Legújabb elől
+
+        if (error) throw error;
+
+        if (data) {
+          setItems(data);
+        }
+      } catch (error) {
+        console.error("Hiba a képek betöltésekor:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImages();
   }, []);
 
+  // Szűrés logika
   const filteredItems = filter === "all" 
-    ? shuffledItems 
-    : portfolioData.filter(item => item.category === filter);
+    ? items 
+    : items.filter(item => item.category === filter);
 
   return (
     <section id="galeria" className="py-24 bg-stone-50">
       <div className="container mx-auto px-6">
         <SectionHeading 
-          title="Munkáim" // ÁTÍRVA: Munkáink -> Munkáim
-          subtitle="Válogatás az általam készített ruhákból és átalakításokból." // ÁTÍRVA: általunk -> általam
+          title="Munkáim" 
+          subtitle="Válogatás az általam készített ruhákból és átalakításokból."
         />
         
+        {/* SZŰRŐ GOMBOK */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map((cat) => (
             <button
@@ -310,39 +270,49 @@ const Gallery = () => {
           ))}
         </div>
 
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, index) => (
-              <motion.div 
-                layout
-                key={item.src} 
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.3 }}
-                className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-shadow bg-white"
-              >
-                <div className="aspect-[3/4] relative overflow-hidden">
-                    <Image 
-                        src={item.src} 
-                        alt={item.title || "Varroda referencia"} 
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span className="text-rose-400 text-xs font-bold uppercase tracking-wider mb-1">
-                          {categories.find(c => c.id === item.category)?.label}
-                        </span>
-                        {item.title && (
-                          <h3 className="text-white font-serif text-xl font-bold">{item.title}</h3>
-                        )}
-                    </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        {/* LOADING STATE */}
+        {loading ? (
+           <div className="flex justify-center items-center py-20">
+             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
+           </div>
+        ) : (
+          /* KÉPEK GRID */
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <AnimatePresence mode="popLayout">
+              {filteredItems.map((item) => (
+                <motion.div 
+                  layout
+                  key={item.id} // Supabase ID a kulcs
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                  className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-shadow bg-white"
+                >
+                  <div className="aspect-[3/4] relative overflow-hidden">
+                      <Image 
+                          src={item.src} 
+                          alt={item.category} 
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                          <span className="text-rose-400 text-xs font-bold uppercase tracking-wider mb-1">
+                            {categories.find(c => c.id === item.category)?.label}
+                          </span>
+                      </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+        
+        {/* Ha nincs kép */}
+        {!loading && items.length === 0 && (
+            <p className="text-center text-stone-400 mt-10">Jelenleg nincsenek feltöltött képek.</p>
+        )}
       </div>
     </section>
   );
