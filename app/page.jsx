@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Scissors, Phone, MapPin, Mail, Instagram, Facebook, Clock, Star, Menu, X, ArrowRight, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabaseClient";
+import { FiPhone } from "react-icons/fi";
 
 const categories = [
   { id: "all", label: "Összes munka" },
@@ -590,6 +591,22 @@ export default function Home() {
       {/* LÁBLÉC */}
       <footer className="bg-stone-950 text-stone-600 py-10 text-center text-sm border-t border-stone-900">
         <p>&copy; {new Date().getFullYear()} Csizi Varrodája. Minden jog fenntartva.</p>
+        <div className="mt-2 flex items-center justify-center gap-2">
+            <span>Az oldalt készítette:</span>
+            <a 
+              href="mailto:kapcsolat@kovacsbalintfoto.hu" 
+              className="text-gray-500 hover:text-[#B76E79] font-medium transition-colors"
+            >
+              Kovács Bálint
+            </a>
+            <a 
+              href="tel:+36308723777" 
+              className="text-gray-500 hover:text-[#B76E79] transition-colors flex items-center" 
+              aria-label="Telefonhívás"
+            >
+              <Phone size={16} />
+            </a>
+          </div>
         <div className="flex justify-center gap-6 mt-4">
             <a href="#" className="hover:text-rose-500 transition-colors">Adatkezelés</a>
             <a href="#" className="hover:text-rose-500 transition-colors">Impresszum</a>
